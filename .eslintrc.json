@@ -1,0 +1,13 @@
+{
+    "extends": ["react-app","airbnb", "prettier","plugin:react/recommended"],
+    "plugins": ["prettier", "react-hooks"],
+    "rules": {
+        "no-unused-vars":"warn",
+        "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
+        "react-hooks/rules-of-hooks": "error",
+        "react-hooks/exhaustive-deps": "warn"
+    },
+    "parserOptions": {
+        "sourceType": "module"
+    }
+}
