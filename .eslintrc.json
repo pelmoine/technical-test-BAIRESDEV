@@ -5,7 +5,9 @@
         "no-unused-vars":"warn",
         "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
         "react-hooks/rules-of-hooks": "error",
-        "react-hooks/exhaustive-deps": "warn"
+        "react-hooks/exhaustive-deps": "warn",
+        "no-plusplus": [2, { "allowForLoopAfterthoughts": true }]
+
     },
     "parserOptions": {
         "sourceType": "module"

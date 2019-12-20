@@ -1,20 +1,12 @@
 import React, { useState, useEffect } from 'react'
 import './App.css'
-import Image from './components/image/image-component'
-import Title from './components/title/title-component'
+import Album from './components/album-component/album'
 
 export const getMapGroupBy = (arr, prop) => {
   if(!prop) return new Map();
   const map = new Map(Array.from(arr, obj => [obj[prop], []]))
   arr.forEach(obj => map.get(obj[prop]).push(obj))
-  // return Array.from(map.values());
   return map
-}
-
-export const orderElement = (array) => {
-  return array.sort( (a, b) => {
-    return b.id - a.id
-  })
 }
 
 export const orderResultsByAlbum = (map) => {
@@ -23,18 +15,20 @@ export const orderResultsByAlbum = (map) => {
   }));
 };
 
-export const getThreeFirstResult = (map) => {
+export const getFirstAlbum = (map, nbFirstAlbum) => {
   const iterator = map.values();
-  return [iterator.next().value, iterator.next().value, iterator.next().value];
+  const threeFirstAlbum = [];
+  for (let i = 0; i < nbFirstAlbum; i++) {
+    const pictures = iterator.next().value;
+    threeFirstAlbum.push({id: pictures[0].albumId,pictures}); 
+  }
+  return threeFirstAlbum;
 }
 
-export const getFirstsAlbumsPicture = (albumPicture, numberOfElement) => {
-  return albumPicture.map(album => {
-    const newElement = orderElement(album);
-    newElement.splice(numberOfElement);
-    album.id = album[0].albumId;
-    return newElement;
-  });
+export const getAlbums = (results, nbFirstAlbum) => {
+  const albumResults = getMapGroupBy(results, 'albumId');
+  const orderAlbums = orderResultsByAlbum(albumResults);
+  return getFirstAlbum(orderAlbums, nbFirstAlbum);
 }
 
 function App () {
@@ -47,14 +41,7 @@ function App () {
       )
       result.json()
         .then(results => {
-          const albumResults = getMapGroupBy(results, 'albumId')
-          const orderAlbums = orderResultsByAlbum(albumResults);
-          const threeFirstAlbums = getThreeFirstResult(orderAlbums);
-          console.log(threeFirstAlbums);
-
-          const albumsWithOrderPicture = getFirstsAlbumsPicture(threeFirstAlbums, 2);
-
-          setAlbums(albumsWithOrderPicture);
+          setAlbums(getAlbums(results, 3));
         })
         .catch(error => {
           console.error('Error during fetching data : ', error)
@@ -65,17 +52,9 @@ function App () {
 
   return (
     <div data-testid="app" className="App">
-      <header />
       {
         albums.map((album) => (
-          <div key={album.id} style={{display:'flex', padding:'10px'}}>
-            {album.map(picture => (
-              <div key={picture.id} style={{padding:'10px'}}>
-                <Title title={picture.title} />
-                <Image url={picture.url} />
-              </div>
-            ))}
-          </div>
+          <Album key={album.id} pictures={album.pictures} />
         ))
       }   
     </div>

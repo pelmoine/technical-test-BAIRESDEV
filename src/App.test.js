@@ -1,6 +1,9 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { render , cleanup} from '@testing-library/react';
 import App, {getMapGroupBy} from './App';
+
+afterEach(cleanup);
+
 
 test('renders learn react link', () => {
   const { getByTestId } = render(<App />);
@@ -8,7 +11,7 @@ test('renders learn react link', () => {
   expect(linkElement).toBeInTheDocument();
 });
 
-test('Given empty Array, When getMapGroupBy, Then empty map' , () => {
+test('getMapGroupBy with an empty array and undefined field to group,  return an empty map' , () => {
   // GIVEN
   const array = [];
   const field = undefined;
@@ -18,7 +21,7 @@ test('Given empty Array, When getMapGroupBy, Then empty map' , () => {
   expect(result.size).toBe(0);
 });
 
-test('Given an Array and an undefined group by field, When getMapGroupBy, Then empty map' , () => {
+test('getMapGroupBy with an array and an undefined field to group, return an empty map' , () => {
   // GIVEN
   const array = [{a:1,b:2}, {a:3,b:4}];
   const field = undefined;
